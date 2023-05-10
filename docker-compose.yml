@@ -1,0 +1,18 @@
+version: '1.1'
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: moneydash
+    restart: always
+    volumes:
+      - ./data:/app/data 
+  metabase:
+    image: metabase/metabase
+    container_name: metabase
+    restart: always
+    ports:
+      - "3115:3000"
+    volumes:
+      - ./data:/metabase-data

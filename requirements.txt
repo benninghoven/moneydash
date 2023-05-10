@@ -1,0 +1,5 @@
+plaid==0.1.7
+plaid-python==13.0.0
+pyotp==2.8.0
+requests==2.30.0
+robin-stocks==2.1.0
