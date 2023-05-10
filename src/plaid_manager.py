@@ -80,6 +80,10 @@ def FetchBOFATransactions():
 
     for transaction in transactions:
 
+        pending = transaction["pending"]
+        if pending:
+            continue
+
         transaction_id = transaction["transaction_id"]
         account_id = transaction["account_id"]
         amount = transaction["amount"]
