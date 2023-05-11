@@ -1,2 +1,1 @@
-touch ./data/database.db
-docker-compose up
+python3 ./src/main.py

@@ -9,7 +9,6 @@ from load_credentials import LoadCredentials
 
 
 def GetPlaidClient():
-    print("getting plaid client")
     credentials = LoadCredentials(G.credentialsPath)
     plaidCredentials = credentials["plaid"]
 
@@ -28,14 +27,12 @@ def GetPlaidClient():
 
 
 def GetAccessToken():
-    print("getting access token")
     credentials = LoadCredentials(G.credentialsPath)
     plaidCredentials = credentials["plaid"]
     return plaidCredentials["access_token"]
 
 
 def FetchPlaidData():
-    print("fetching plaid data")
     loot = dict()
     access_token = GetAccessToken()
 
@@ -62,7 +59,6 @@ def FetchPlaidData():
 
 
 def FetchBOFATransactions():
-    print("fetching bofa transactions")
     loot = dict()
 
     end_date = datetime.date.today()
@@ -89,16 +85,17 @@ def FetchBOFATransactions():
         amount = transaction["amount"]
         date = transaction["date"]
         category = transaction["category"]
-        category_id = transaction["category_id"]
         name = transaction["name"]
         payment_channel = transaction["payment_channel"]
+
+        category = sorted(category)
+        categories = ', '.join(category)
 
         transaction_dict = {
             "account_id": account_id,
             "amount": amount,
             "date": date,
-            "category": category,
-            "category_id": category_id,
+            "categories": categories,
             "name": name,
             "payment_channel": payment_channel
             }

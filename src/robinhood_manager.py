@@ -1,5 +1,4 @@
 import robin_stocks.robinhood as r
-import os
 import pyotp
 
 from globals import GLOBALS as G
@@ -7,21 +6,18 @@ from load_credentials import LoadCredentials
 
 
 def GetPriceOfCrypto(key, totalShares):
-    print(f"getting price of {key}")
     crypto_info = r.crypto.get_crypto_quote(key)
     return float(crypto_info['mark_price']) * totalShares
 
 
 def FetchRobinhoodData():
-    print("fetching robinhood data")
     loot = dict()
 
     credentials = LoadCredentials(G.credentialsPath)
     robinhoodCredentials = credentials["robinhood"]
     username = robinhoodCredentials["username"]
     password = robinhoodCredentials["password"]
-
-    otp_secret = os.environ.get('OTP_SECRET')
+    otp_secret = credentials["otp_secret"]
     totp = pyotp.TOTP(otp_secret).now()
 
     r.login(username, password, mfa_code=totp)

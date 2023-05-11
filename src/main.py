@@ -6,14 +6,12 @@ from database_manager import ExportRobinhoodData
 from database_manager import ExportAccountData
 from database_manager import ExportBOFATransactions
 
-
-robin_data = FetchRobinhoodData()
-plaid_Data = FetchPlaidData()
+robinData = FetchRobinhoodData()
+plaidData = FetchPlaidData()
 bofaTransactions = FetchBOFATransactions()
 
-ExportRobinhoodData(robin_data)
-ExportAccountData(plaid_Data)
+ExportRobinhoodData(robinData)
+ExportAccountData(plaidData)
 ExportBOFATransactions(bofaTransactions)
-
 
 print("finished running main")

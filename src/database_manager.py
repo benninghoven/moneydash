@@ -3,7 +3,6 @@ from globals import GLOBALS as G
 
 
 def ExportRobinhoodData(data=None):
-    print("exporting robinhood data")
     if (data is None):
         return False
     conn = sqlite3.connect(G.databasePath)
@@ -34,7 +33,6 @@ def ExportRobinhoodData(data=None):
 
 
 def ExportAccountData(data=None):
-    print("exporting account data")
     if (data is None):
         return False
     conn = sqlite3.connect(G.databasePath)
@@ -68,7 +66,6 @@ def ExportAccountData(data=None):
 
 
 def ExportBOFATransactions(data=None):
-    print("exporting bofa transactions data")
     if (data is None):
         return False
     conn = sqlite3.connect(G.databasePath)
@@ -79,7 +76,7 @@ def ExportBOFATransactions(data=None):
                      account_id TEXT NOT NULL,
                      amount REAL,
                      date text NOT NULL,
-                     category_id REAL,
+                     categories TEXT NOT NULL,
                      name TEXT NOT NULL,
                      payment_channel TEXT NOT NULL
                      );
@@ -92,7 +89,7 @@ def ExportBOFATransactions(data=None):
                          account_id,
                          amount,
                          date,
-                         category_id,
+                         categories,
                          name,
                          payment_channel)
                          VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -101,7 +98,7 @@ def ExportBOFATransactions(data=None):
                              v["account_id"],
                              v["amount"],
                              v["date"],
-                             v["category_id"],
+                             v["categories"],
                              v["name"],
                              v["payment_channel"]
                              ))
