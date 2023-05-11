@@ -1,4 +1,5 @@
 import sqlite3
+import datetime
 from globals import GLOBALS as G
 
 
@@ -53,13 +54,13 @@ def ExportAccountData(data=None):
                          name,
                          nickname,
                          current_balance)
-                         VALUES (?, ?, ?, ?)
-                         ''', (
-                             k,
-                             v["name"],
-                             v["nickname"],
-                             v["current_balance"]
-                             ))
+                     VALUES (?, ?, ?, ?)
+                     ''', (
+                         k,
+                         v["name"],
+                         v["nickname"],
+                         v["current_balance"]
+                         ))
 
     conn.commit()
     conn.close()
@@ -92,16 +93,58 @@ def ExportBOFATransactions(data=None):
                          categories,
                          name,
                          payment_channel)
-                         VALUES (?, ?, ?, ?, ?, ?, ?)
-                         ''', (
-                             k,
-                             v["account_id"],
-                             v["amount"],
-                             v["date"],
-                             v["categories"],
-                             v["name"],
-                             v["payment_channel"]
-                             ))
+                     VALUES (?, ?, ?, ?, ?, ?, ?)
+                     ''', (
+                         k,
+                         v["account_id"],
+                         v["amount"],
+                         v["date"],
+                         v["categories"],
+                         v["name"],
+                         v["payment_channel"]
+                         ))
+
+    conn.commit()
+    conn.close()
+
+
+def UpdateLastUpdated():
+    conn = sqlite3.connect(G.databasePath)
+    conn.execute("CREATE TABLE IF NOT EXISTS last_updated (timestamp TEXT)")
+    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    if conn.execute("SELECT COUNT(*) FROM last_updated").fetchone()[0] == 0:
+        conn.execute("INSERT INTO last_updated(timestamp) VALUES (?)", (current_time,))
+    else:
+        conn.execute("UPDATE last_updated SET timestamp = ?", (current_time,))
+    conn.commit()
+    conn.close()
+
+
+def ExportCoinbaseData(data=None):
+    if (data is None):
+        return False
+    conn = sqlite3.connect(G.databasePath)
+
+    conn.execute('''
+                 CREATE TABLE IF NOT EXISTS coinbase_coins(
+                     name TEXT PRIMARY KEY,
+                     amount_of_coins REAL,
+                     total_value REAL
+                     );
+                 ''')
+
+    for k, v in data.items():
+        conn.execute('''
+                     INSERT OR REPLACE INTO coinbase_coins(
+                         name,
+                         amount_of_coins,
+                         total_value)
+                     VALUES (?, ?, ?)
+                     ''', (
+                         k,
+                         v["amount_of_coins"],
+                         v["total_value"]
+                         ))
 
     conn.commit()
     conn.close()
