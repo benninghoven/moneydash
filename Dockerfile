@@ -7,6 +7,9 @@ RUN apt-get update && apt-get install -y \
     cron \
     && rm -rf /var/lib/apt/lists/*
 
+RUN ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
+RUN echo "America/Los_Angeles" > /etc/timezone
+
 # Set the working directory to /app
 WORKDIR /app
 
