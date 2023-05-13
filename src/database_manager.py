@@ -3,105 +3,74 @@ import datetime
 from globals import GLOBALS as G
 
 
-def ExportRobinhoodData(data=None):
+def ExportBankAccounts(data=None):
     if (data is None):
         return False
+
     conn = sqlite3.connect(G.databasePath)
 
     conn.execute('''
-                 CREATE TABLE IF NOT EXISTS stonks (
-                     name TEXT PRIMARY KEY,
-                     ammount_of_shares REAL,
-                     total_value REAL
-                     );
-                 ''')
-
-    for k, v in data.items():
-        conn.execute('''
-                     INSERT OR REPLACE INTO stonks(
-                         name,
-                         ammount_of_shares,
-                         total_value)
-                     VALUES (?, ?, ?)
-                     ''', (
-                         k,
-                         v["ammount_of_shares"],
-                         v["total_value"]
-                         ))
-
-    conn.commit()
-    conn.close()
-
-
-def ExportAccountData(data=None):
-    if (data is None):
-        return False
-    conn = sqlite3.connect(G.databasePath)
-
-    conn.execute('''
-                 CREATE TABLE IF NOT EXISTS bofa_accounts (
+                 CREATE TABLE IF NOT EXISTS bank_accounts(
                      id TEXT PRIMARY KEY,
                      name TEXT NOT NULL,
                      nickname TEXT NOT NULL,
-                     current_balance REAL
+                     balance REAL
                      );
                  ''')
 
-    for k, v in data.items():
+    for v in data:
         conn.execute('''
-                     INSERT OR REPLACE INTO bofa_accounts (
+                     INSERT OR REPLACE INTO bank_accounts(
                          id,
                          name,
                          nickname,
-                         current_balance)
+                         balance)
                      VALUES (?, ?, ?, ?)
                      ''', (
-                         k,
-                         v["name"],
-                         v["nickname"],
-                         v["current_balance"]
+                         v.id,
+                         v.name,
+                         v.nickname,
+                         v.balance,
                          ))
 
     conn.commit()
     conn.close()
 
 
-def ExportBOFATransactions(data=None):
+def ExportTransactions(data=None):
     if (data is None):
         return False
+
     conn = sqlite3.connect(G.databasePath)
 
     conn.execute('''
-                 CREATE TABLE IF NOT EXISTS bofa_transactions (
+                 CREATE TABLE IF NOT EXISTS transactions (
                      transaction_id TEXT PRIMARY KEY,
-                     account_id TEXT NOT NULL,
+                     card_nickname TEXT NOT NULL,
                      amount REAL,
                      date text NOT NULL,
                      categories TEXT NOT NULL,
-                     name TEXT NOT NULL,
-                     payment_channel TEXT NOT NULL
+                     name TEXT NOT NULL
                      );
                  ''')
 
-    for k, v in data.items():
+    for v in data:
         conn.execute('''
-                     INSERT OR REPLACE INTO bofa_transactions (
+                     INSERT OR REPLACE INTO transactions(
                          transaction_id,
-                         account_id,
+                         card_nickname,
                          amount,
                          date,
                          categories,
-                         name,
-                         payment_channel)
-                     VALUES (?, ?, ?, ?, ?, ?, ?)
+                         name)
+                     VALUES (?, ?, ?, ?, ?, ?)
                      ''', (
-                         k,
-                         v["account_id"],
-                         v["amount"],
-                         v["date"],
-                         v["categories"],
-                         v["name"],
-                         v["payment_channel"]
+                         v.id,
+                         v.card_nickname,
+                         v.amount,
+                         v.date,
+                         v.categories,
+                         v.name,
                          ))
 
     conn.commit()
@@ -120,30 +89,30 @@ def UpdateLastUpdated():
     conn.close()
 
 
-def ExportCoinbaseData(data=None):
+def ExportInvestments(data=None):
     if (data is None):
         return False
     conn = sqlite3.connect(G.databasePath)
 
     conn.execute('''
-                 CREATE TABLE IF NOT EXISTS coinbase_coins(
+                 CREATE TABLE IF NOT EXISTS investments(
                      name TEXT PRIMARY KEY,
-                     amount_of_coins REAL,
+                     total_shares REAL,
                      total_value REAL
                      );
                  ''')
 
-    for k, v in data.items():
+    for k, inv in data.items():
         conn.execute('''
-                     INSERT OR REPLACE INTO coinbase_coins(
+                     INSERT OR REPLACE INTO investments(
                          name,
-                         amount_of_coins,
+                         total_shares,
                          total_value)
                      VALUES (?, ?, ?)
                      ''', (
-                         k,
-                         v["amount_of_coins"],
-                         v["total_value"]
+                         inv.name,
+                         inv.total_shares,
+                         inv.total_value,
                          ))
 
     conn.commit()

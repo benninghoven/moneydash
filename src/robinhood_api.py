@@ -3,6 +3,7 @@ import pyotp
 
 from globals import GLOBALS as G
 from load_credentials import LoadCredentials
+from classes.investment import Investment
 
 
 def GetPriceOfCrypto(key, totalShares):
@@ -10,8 +11,8 @@ def GetPriceOfCrypto(key, totalShares):
     return float(crypto_info['mark_price']) * totalShares
 
 
-def FetchRobinhoodData():
-    loot = dict()
+def FetchRobinhoodInvestments():
+    loot = []
 
     credentials = LoadCredentials(G.credentialsPath)
     robinhoodCredentials = credentials["robinhood"]
@@ -27,11 +28,10 @@ def FetchRobinhoodData():
     for key, value in holdings.items():
         quant = float(value['quantity'])
         share_price = float(value['price'])
-        current_balance = quant * share_price
-        loot[key] = {
-                     "ammount_of_shares": quant,
-                     "total_value": current_balance
-                     }
+        total_value = quant * share_price
+        temp = Investment(key, quant, total_value)
+        loot.append(temp)
+
 # crypto
     crypto_positions = r.crypto.get_crypto_positions()
     for c in crypto_positions:
@@ -40,9 +40,7 @@ def FetchRobinhoodData():
             continue
         key = (c['currency']['code'])
         totalValueOfShares = GetPriceOfCrypto(key, avail)
+        temp = Investment(key, avail, totalValueOfShares)
+        loot.append(temp)
 
-        loot[key] = {
-                     "ammount_of_shares": avail,
-                     "total_value": totalValueOfShares
-                     }
     return loot

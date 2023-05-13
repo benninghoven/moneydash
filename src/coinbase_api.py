@@ -1,9 +1,11 @@
-from globals import GLOBALS as G
-from load_credentials import LoadCredentials
 import time
 import hmac
 import hashlib
 import requests
+
+from globals import GLOBALS as G
+from load_credentials import LoadCredentials
+from classes.investment import Investment
 
 
 def FetchPriceOf(cryptoKey):
@@ -14,9 +16,8 @@ def FetchPriceOf(cryptoKey):
     return float(crypto_price)
 
 
-def FetchCoinbaseData():
-
-    loot = dict()
+def FetchCoinbaseInvestments():
+    investments = []
 
     credentials = LoadCredentials(G.credentialsPath)
     coinbaseCredentials = credentials["coinbase"]
@@ -48,10 +49,9 @@ def FetchCoinbaseData():
                 if amount > 0.0:
                     code = account["balance"]["currency"]
                     total_value = FetchPriceOf(code)*amount
-                    loot[code] = {"amount_of_coins": amount,
-                                  "total_value": total_value,
-                                  }
-        return loot
+                    temp = Investment(code, amount, total_value)
+                    investments.append(temp)
+        return investments
     else:
         print('Request failed with status code:', response.status_code)
         return None
