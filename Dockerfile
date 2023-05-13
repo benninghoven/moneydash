@@ -19,6 +19,8 @@ COPY . /app
 # Install any needed packages specified in requirements.txt
 RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
 
+RUN python3 src/main.py
+
 # Add crontab file
 COPY crontab /etc/cron.d/crontab
 

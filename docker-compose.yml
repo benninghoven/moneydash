@@ -1,17 +1,22 @@
 version: '3.3'
+
 services:
-  app:
+
+  financescraper:
     build:
       context: .
       dockerfile: Dockerfile
-    container_name: moneydash
+    container_name: financescraper
     restart: always
     volumes:
       - ./data:/app/data 
+
   metabase:
     image: metabase/metabase
     container_name: metabase
     restart: always
+    depends_on:
+      - financescraper
     ports:
       - "3115:3000"
     volumes:
