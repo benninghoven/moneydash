@@ -3,3 +3,4 @@ plaid-python==13.0.0
 pyotp==2.8.0
 requests==2.30.0
 robin-stocks==2.1.0
+pytz==2023.3

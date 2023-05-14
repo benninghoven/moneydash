@@ -7,9 +7,6 @@ RUN apt-get update && apt-get install -y \
     cron \
     && rm -rf /var/lib/apt/lists/*
 
-RUN ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime
-RUN echo "America/Los_Angeles" > /etc/timezone
-
 # Set the working directory to /app
 WORKDIR /app
 
@@ -18,8 +15,6 @@ COPY . /app
 
 # Install any needed packages specified in requirements.txt
 RUN pip3 install --trusted-host pypi.python.org -r requirements.txt
-
-RUN python3 src/main.py
 
 # Add crontab file
 COPY crontab /etc/cron.d/crontab
@@ -32,5 +27,4 @@ RUN crontab /etc/cron.d/crontab
 
 RUN touch /var/log/cron.log
 
-# Start cron daemon and run the Python script
-CMD cron && tail -f /var/log/cron.log
+CMD python3 src/main.py && cron && tail -f /var/log/cron.log

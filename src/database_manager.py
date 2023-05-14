@@ -1,5 +1,6 @@
 import sqlite3
 import datetime
+import pytz
 from globals import GLOBALS as G
 
 
@@ -80,7 +81,11 @@ def ExportTransactions(data=None):
 def UpdateLastUpdated():
     conn = sqlite3.connect(G.databasePath)
     conn.execute("CREATE TABLE IF NOT EXISTS last_updated (timestamp TEXT)")
-    current_time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+
+    la_timezone = pytz.timezone('America/Los_Angeles')
+    current_time = datetime.datetime.now(la_timezone).strftime('%Y-%m-%d %H:%M:%S')
+    print(current_time)
+
     if conn.execute("SELECT COUNT(*) FROM last_updated").fetchone()[0] == 0:
         conn.execute("INSERT INTO last_updated(timestamp) VALUES (?)", (current_time,))
     else:
